@@ -55,7 +55,7 @@ if __name__ == '__main__':
         }
     assert (torch.cuda.is_available()), 'Please enable GPU in order to run Whisper!'
     model = whisper.load_model(args.whisper_size)
-    dataset_dir = './dataset/'
+    dataset_dir = './dataset'
     speaker_names = list(os.walk(dataset_dir))[0][1]
     print(f'Found speakers: {speaker_names}')
     speaker_annos = []
@@ -73,7 +73,7 @@ if __name__ == '__main__':
             if wavfile.startswith('processed_'):
                 continue
             try:
-                wav, sr = torchaudio.load(f'{dataset_dir}{speaker}/{wavfile}', frame_offset=0, num_frames=-1, normalize=True,
+                wav, sr = torchaudio.load(f'{dataset_dir}/{speaker}/{wavfile}', frame_offset=0, num_frames=-1, normalize=True,
                                           channels_first=True)
                 wav = wav.mean(dim=0).unsqueeze(0)
                 if sr != target_sr:
