@@ -8,6 +8,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--add_auxiliary_data", type=bool, help="Whether to add extra data as fine-tuning helper")
     parser.add_argument("--languages", default="CJE")
+    parser.add_argument("--speaker", default="speaker")
     args = parser.parse_args()
     if args.languages == "CJE":
         langs = ["[ZH]", "[JA]", "[EN]"]
@@ -15,6 +16,8 @@ if __name__ == "__main__":
         langs = ["[ZH]", "[JA]"]
     elif args.languages == "C":
         langs = ["[ZH]"]
+    elif args.languages == "J":
+        langs = ["[JA]"]
     new_annos = []
     # Source 1: transcribed short audios
     if os.path.exists("short_character_anno.txt"):
@@ -75,7 +78,7 @@ if __name__ == "__main__":
         hps['data']['training_files'] = "final_annotation_train.txt"
         hps['data']['validation_files'] = "final_annotation_val.txt"
         # save modified config
-        with open("./configs/modified_finetune_speaker.json", 'w', encoding='utf-8') as f:
+        with open(f"./configs/{args.speaker}_finetune_speaker.json", 'w', encoding='utf-8') as f:
             json.dump(hps, f, indent=2)
 
         # STEP 3: clean annotations, replace speaker names with assigned speaker IDs
@@ -127,7 +130,7 @@ if __name__ == "__main__":
         hps['data']['training_files'] = "final_annotation_train.txt"
         hps['data']['validation_files'] = "final_annotation_val.txt"
         # save modified config
-        with open("./configs/modified_finetune_speaker.json", 'w', encoding='utf-8') as f:
+        with open(f"./configs/{args.speaker}_finetune_speaker.json", 'w', encoding='utf-8') as f:
             json.dump(hps, f, indent=2)
 
         # STEP 2: clean annotations, replace speaker names with assigned speaker IDs
