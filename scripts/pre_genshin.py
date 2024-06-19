@@ -9,7 +9,7 @@ class Preprocess:
         self.dataset_name = dataset_name
     
     def remove_lab(self):
-        for root, dirs, files in os.walk(self.dataset_name):
+        for root, dirs, files in os.walk(f'./dataset/{self.dataset_name}'):
             for file in files:
                 if file.endswith('.lab'):
                     os.remove(os.path.join(root, file))
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     parser.add_argument('--dataset', type=str, help='Name of dataset')
     args = parser.parse_args()
     
-    pre = Preprocess(args.dataset_name)
+    pre = Preprocess(args.dataset)
     pre.remove_lab()
     pre.reshape_data()
     pre.get_dataset_size()
