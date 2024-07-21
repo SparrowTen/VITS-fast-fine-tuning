@@ -20,5 +20,6 @@ if __name__ == '__main__':
                 if l in sub:
                     sub = sub.replace(l, '')
                     break
+            os.makedirs('./sub', exist_ok=True)
             with open(f'./sub/{args.speaker}_sub.txt', 'a', encoding='utf-8') as f:
                 f.write(f'{orgin}|{sub}\n')
