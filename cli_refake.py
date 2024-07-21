@@ -16,14 +16,7 @@ logging.getLogger('markdown_it').setLevel(logging.WARNING)
 logging.getLogger('httpx').setLevel(logging.WARNING)
 logging.getLogger('asyncio').setLevel(logging.WARNING)
 
-language_marks = {
-    'Japanese': '',
-    '日本語': '[JA]',
-    '简体中文': '[ZH]',
-    'English': '[EN]',
-    'Mix': '',
-}
-lang = ['日本語', '简体中文', 'English', 'Mix']
+lang2token = {'J': '[JA]', 'C': '[ZH]', 'E': '[EN]'}
 def get_text(text, hps, is_symbol):
     text_norm = text_to_sequence(text, hps.symbols, [] if is_symbol else hps.data.text_cleaners)
     if hps.data.add_blank:
@@ -33,7 +26,7 @@ def get_text(text, hps, is_symbol):
 
 def tts_fn(model, text, speaker_id, language, speed):
     if language is not None:
-        text = language_marks[language] + text + language_marks[language]
+        text = lang2token[language] + text + lang2token[language]
     stn_tst = get_text(text, hps, False)
     with no_grad():
         x_tst = stn_tst.unsqueeze(0).to(device)
@@ -48,6 +41,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_dir', default='./G_latest.pth', help='directory to your fine-tuned model')
     parser.add_argument('--config_dir', default='./finetune_speaker.json', help='directory to your model config file')
+    parser.add_argument('--language', default='CJE', help='Languages')
     parser.add_argument('--prompts', help='prompts text file for the model')
     parser.add_argument('--speaker', help='output dir speaker name')
 
@@ -74,7 +68,7 @@ if __name__ == '__main__':
         for line in lines:
             orgin = line.split('|')[0].replace('.wav', '')
             prompt = line.split('|')[1].replace('\n', '')
-            status, (sampling_rate, audio) = tts_fn(model, prompt, speaker_id, '简体中文', 1.0)
+            status, (sampling_rate, audio) = tts_fn(model, prompt, speaker_id, args.language, 1.0)
             wavf.write(os.path.join(output_dir, f'{orgin}_f.wav'), hps.data.sampling_rate, audio)
             print(f'Process: {counter}/{len(lines)}')
             counter += 1
