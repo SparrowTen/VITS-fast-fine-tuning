@@ -20,8 +20,8 @@ if __name__ == "__main__":
         langs = ["[JA]"]
     new_annos = []
     # Source 1: transcribed short audios
-    if os.path.exists("short_character_anno.txt"):
-        with open("short_character_anno.txt", 'r', encoding='utf-8') as f:
+    if os.path.exists(f"./anno/short_character_anno_{args.speaker}.txt"):
+        with open(f"./anno/short_character_anno_{args.speaker}.txt", 'r', encoding='utf-8') as f:
             short_character_anno = f.readlines()
             new_annos += short_character_anno
     # Source 2: transcribed long audio segments
