@@ -66,8 +66,8 @@ if __name__ == '__main__':
     speaker_id = 0
     model = net_g
     counter = 1
-    if os.path.exists(f'.\output\{args.speaker}') is False:
-        os.makedirs(f'.\output\{args.speaker}')
+    output_dir = os.path.join('output', args.speaker)
+    os.makedirs(output_dir, exist_ok=True)
     
     with open(args.prompts, 'r', encoding='utf-8') as f:
         lines = f.readlines()
@@ -75,6 +75,6 @@ if __name__ == '__main__':
             orgin = line.split('|')[0].replace('.wav', '')
             prompt = line.split('|')[1].replace('\n', '')
             status, (sampling_rate, audio) = tts_fn(model, prompt, speaker_id, '简体中文', 1.0)
-            wavf.write(f'.\output\{args.speaker}\{orgin}_f.wav', hps.data.sampling_rate, audio)
+            wavf.write(os.path.join(output_dir, f'{orgin}_f.wav'), hps.data.sampling_rate, audio)
             print(f'Process: {counter}/{len(lines)}')
             counter += 1
